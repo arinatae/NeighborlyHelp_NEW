@@ -1,35 +1,16 @@
-using NeighborlyHelp;
 using NeighborlyHelp.Managers;
 using NeighborlyHelp.Models;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
+using Screen = System.Windows.Forms.Screen;
 
 namespace NeighborlyHelp
 {
-    public enum GameState
-    {
-        Intro,
-        Quest1_Talk,
-        Quest1_Find,
-        Quest1_Return,
-        Quest2_Spawn,
-        Quest2_MiniGame,
-        Quest2_Deliver,
-        Quest3_Spawn,
-        Quest3_Talk,
-        Quest3_Watering,
-        Quest3_Completed,
-        Quest4_Spawn,     // Появление Ричарда
-        Quest4_Talk,      // Диалог с Ричардом
-        Quest4_Radio,     // Мини-игра с радио
-        Quest4_Completed
-    }
-
     public partial class Form1 : Form
     {
-        private GameState currentGameState = GameState.Intro;
+        private Models.GameState currentGameState = Models.GameState.Intro;
         private Player player = null!;
         private GameField gameField = null!;
         private Timer gameTimer = null!;
@@ -89,7 +70,7 @@ namespace NeighborlyHelp
             return distance <= INTERACTION_RADIUS;
         }
 
-        private void HintTimer_Tick(object? sender, EventArgs e)
+        private void HintTimer_Tick(object sender, EventArgs e)
         {
             interactionHint = "";
             hintTimer.Stop();
@@ -194,7 +175,7 @@ namespace NeighborlyHelp
                             inventory.Add(new Item("Посылка №18046", "Тяжелая коробка", Color.Brown));
                             isMiniGameActive = false;
                             mailOptions.Clear();
-                            currentGameState = GameState.Quest2_Deliver;
+                            currentGameState = Models.GameState.Quest2_Deliver;
                             this.Invalidate();
                         }
                         else
@@ -207,7 +188,7 @@ namespace NeighborlyHelp
                 return;
             }
 
-            if (currentGameState == GameState.Quest2_Spawn)
+            if (currentGameState == Models.GameState.Quest2_Spawn)
             {
                 foreach (var obj in gameObjects)
                 {
@@ -220,7 +201,7 @@ namespace NeighborlyHelp
             }
 
             // === КЛИК ПО КЛУМБЕ (Запуск мини-игры) ===
-            if (currentGameState == GameState.Quest3_Spawn)
+            if (currentGameState == Models.GameState.Quest3_Spawn)
             {
                 foreach (var obj in gameObjects)
                 {
@@ -233,7 +214,7 @@ namespace NeighborlyHelp
             }
 
             // === КЛИК ПО РАДИО (Запуск мини-игры) ===
-            if (currentGameState == GameState.Quest4_Talk)
+            if (currentGameState == Models.GameState.Quest4_Talk)
             {
                 foreach (var obj in gameObjects)
                 {
@@ -261,10 +242,10 @@ namespace NeighborlyHelp
                     inventory.Add(item.Item);
                     interactionHint = ""; // Убираем подсказку при успехе
 
-                    if (currentGameState == GameState.Quest1_Find && item.Item.Name == "Ключи")
+                    if (currentGameState == Models.GameState.Quest1_Find && item.Item.Name == "Ключи")
                     {
                         MessageBox.Show("Нашёл ключи! Отнеси их Миле.", "Находка");
-                        currentGameState = GameState.Quest1_Return;
+                        currentGameState = Models.GameState.Quest1_Return;
                     }
                     return;
                 }
@@ -289,7 +270,7 @@ namespace NeighborlyHelp
                     if (npc.DisplayName == "Мила")
                     {
                         spriteName = "sprite1.png";
-                        if (currentGameState == GameState.Quest1_Return)
+                        if (currentGameState == Models.GameState.Quest1_Return)
                         {
                             linesToSay = new List<string>
                 {
@@ -316,7 +297,7 @@ namespace NeighborlyHelp
                     else if (npc.DisplayName == "Оливер")
                     {
                         spriteName = "sprite2.png";
-                        if (currentGameState == GameState.Quest2_Deliver)
+                        if (currentGameState == Models.GameState.Quest2_Deliver)
                         {
                             linesToSay = new List<string>
                 {
@@ -339,7 +320,7 @@ namespace NeighborlyHelp
                     else if (npc.DisplayName == "Мелисса")
                     {
                         spriteName = "sprite1.png";
-                        if (currentGameState == GameState.Quest3_Completed)
+                        if (currentGameState == Models.GameState.Quest3_Completed)
                         {
                             linesToSay = new List<string>
                 {
@@ -362,7 +343,7 @@ namespace NeighborlyHelp
                     else if (npc.DisplayName == "Ричард")
                     {
                         spriteName = "sprite4.png";
-                        if (currentGameState == GameState.Quest4_Spawn)
+                        if (currentGameState == Models.GameState.Quest4_Spawn)
                         {
                             linesToSay = new List<string>
                 {
@@ -377,7 +358,7 @@ namespace NeighborlyHelp
                     "Сейчас настрою, держись!"
                 };
                         }
-                        else if (currentGameState == GameState.Quest4_Completed)
+                        else if (currentGameState == Models.GameState.Quest4_Completed)
                         {
                             linesToSay = new List<string>
                 {
@@ -449,7 +430,7 @@ namespace NeighborlyHelp
             this.Invalidate();
         }
 
-        private void GameLoop(object? sender, EventArgs e)
+        private void GameLoop(object sender, EventArgs e)
         {
             int oldX = player.X;
             int oldY = player.Y;
@@ -485,7 +466,7 @@ namespace NeighborlyHelp
                 {
                     isFlowerGameActive = false;
                     isWatering = false;
-                    currentGameState = GameState.Quest3_Completed;
+                    currentGameState = Models.GameState.Quest3_Completed;
                     MessageBox.Show("🌸 Все цветы расцвели! Отличная работа!", "Успех");
                 }
             }
@@ -493,14 +474,14 @@ namespace NeighborlyHelp
             if (isRadioGameActive && Math.Abs(radioFreq - targetFreq) <= 0.8f)
             {
                 isRadioGameActive = false;
-                currentGameState = GameState.Quest4_Completed;
+                currentGameState = Models.GameState.Quest4_Completed;
                 MessageBox.Show($"📻 Частота {radioFreq:F1} МГц поймана! Передача идет!", "Успех");
                 this.Invalidate();
             }
             this.Invalidate();
         }
 
-        private void Form1_KeyDown(object? sender, KeyEventArgs e)
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             int newX = player.X;
             int newY = player.Y;
@@ -803,7 +784,7 @@ namespace NeighborlyHelp
 
         private void StartStory()
         {
-            currentGameState = GameState.Quest1_Talk;
+            currentGameState = Models.GameState.Quest1_Talk;
             SpawnNPC("Мила", 1400, 500, new List<string>
             {
                 "Ох, привет! Давно не виделись, соседка! Как у тебя дела, все в порядке?",
@@ -845,7 +826,7 @@ namespace NeighborlyHelp
                 npcs.Remove(grandma);
             }
 
-            currentGameState = GameState.Quest2_Spawn;
+            currentGameState = Models.GameState.Quest2_Spawn;
             SpawnNPC("Оливер", 600, 400, new List<string>
             {
                 "Привет, соседка! Ты сегодня просто сияешь ярче солнышка! Я правда очень рад тебя видеть",
@@ -882,7 +863,7 @@ namespace NeighborlyHelp
             }
 
             isMiniGameActive = true;
-            currentGameState = GameState.Quest2_MiniGame;
+            currentGameState = Models.GameState.Quest2_MiniGame;
             this.Invalidate();
         }
 
@@ -916,7 +897,7 @@ namespace NeighborlyHelp
             }
 
             isFlowerGameActive = true;
-            currentGameState = GameState.Quest3_Watering;
+            currentGameState = Models.GameState.Quest3_Watering;
             this.Invalidate();
         }
 
@@ -929,7 +910,7 @@ namespace NeighborlyHelp
                 npcs.Remove(petya);
             }
 
-            currentGameState = GameState.Quest3_Spawn;
+            currentGameState = Models.GameState.Quest3_Spawn;
             SpawnNPC("Мелисса", 150, 400, new List<string>
             {
                 "Добрый денек, моя любимая соседка! Только посмотри, какие цветочки я сегодня посадила! Очень красивые, правда? Тебе нравится",
@@ -978,35 +959,35 @@ namespace NeighborlyHelp
                 dialogueSprite = null;
                 this.Invalidate();
 
-                if (currentGameState == GameState.Quest1_Talk)
+                if (currentGameState == Models.GameState.Quest1_Talk)
                 {
-                    currentGameState = GameState.Quest1_Find;
+                    currentGameState = Models.GameState.Quest1_Find;
                     SpawnKeys();
                     MessageBox.Show("Ищи ключи! Они где-то во дворе.", "Задание");
                 }
-                else if (currentGameState == GameState.Quest1_Return)
+                else if (currentGameState == Models.GameState.Quest1_Return)
                 {
                     inventory.Remove("Ключи");
                     MessageBox.Show("Мила ушла домой. Появился Оливер!", "Квест выполнен");
                     StartQuest2();
                 }
-                else if (currentGameState == GameState.Quest2_Spawn)
+                else if (currentGameState == Models.GameState.Quest2_Spawn)
                 {
                     MessageBox.Show("Найди на складе заказ 18046.", "Оливер");
                 }
-                else if (currentGameState == GameState.Quest2_Deliver)
+                else if (currentGameState == Models.GameState.Quest2_Deliver)
                 {
                     inventory.Remove("Посылка №18046");
                     MessageBox.Show("Оливер ушёл. Появилась Мелисса!", "Квест выполнен");
                     StartQuest3();
                 }
-                else if (currentGameState == GameState.Quest3_Completed)
+                else if (currentGameState == Models.GameState.Quest3_Completed)
                 {
                     // Мелисса благодарит и исчезает, появляется Ричард
                     var melissa = npcs.Find(n => n.DisplayName == "Мелисса");
                     if (melissa != null) { gameObjects.Remove(melissa); npcs.Remove(melissa); }
 
-                    currentGameState = GameState.Quest4_Spawn;
+                    currentGameState = Models.GameState.Quest4_Spawn;
                     gameObjects.Add(new Radio(800, 400));
                     SpawnNPC("Ричард", 950, 400, new List<string>
                 {
@@ -1017,13 +998,13 @@ namespace NeighborlyHelp
                     MessageBox.Show("Мелисса ушла. Ричард ждет помощи у баков!", "Задание обновлено");
                 }
 
-                else if (currentGameState == GameState.Quest4_Spawn)
+                else if (currentGameState == Models.GameState.Quest4_Spawn)
                 {
-                    currentGameState = GameState.Quest4_Talk;
+                    currentGameState = Models.GameState.Quest4_Talk;
                     MessageBox.Show("Теперь кликни по радио на поле!", "Подсказка");
                 }
 
-                else if (currentGameState == GameState.Quest4_Completed)
+                else if (currentGameState == Models.GameState.Quest4_Completed)
                 {
                     MessageBox.Show("Поздравляем! Ты помог всем соседям!\nДвор стал самым уютным местом в городе!", "Победа!");
                     Application.Exit();
@@ -1038,7 +1019,7 @@ namespace NeighborlyHelp
             isRadioGameActive = true;
             radioFreq = 88.0f;
             targetFreq = 88.0f + (float)(new Random().NextDouble() * 15); // Случайная цель от 88 до 103
-            currentGameState = GameState.Quest4_Radio;
+            currentGameState = Models.GameState.Quest4_Radio;
 
             // Границы панели (по центру экрана)
             radioBarBounds = new Rectangle(
@@ -1049,63 +1030,19 @@ namespace NeighborlyHelp
 
             this.Invalidate();
         }
-    }
 
-    public class MailBoxOption
-    {
-        public Rectangle Bounds { get; set; }
-        public string Number { get; set; }
-        public bool IsCorrect { get; set; }
-    }
-
-}
-
-+++NeighborlyHelp / Forms / Form1.cs(修改后)
-using System.Windows.Forms;
-
-namespace NeighborlyHelp
-{
-    /// <summary>
-    /// Главная форма игры. После рефакторинга использует MVC-архитектуру:
-    /// - GameModel хранит все данные игры (Model)
-    /// - GameView отвечает за отрисовку (View)
-    /// - GameController обрабатывает ввод и управляет логикой (Controller)
-    /// </summary>
-    public partial class Form1 : Form
-    {
-        private Models.GameModel _model = null!;
-        private Views.GameView _view = null!;
-        private Controllers.GameController _controller = null!;
-
-        public Form1()
+        public class MailBoxOption
         {
-            InitializeComponent();
-            InitializeMVC();
+            public Rectangle Bounds { get; set; }
+            public string Number { get; set; } = "";
+            public bool IsCorrect { get; set; }
         }
 
-        /// <summary>
-        /// Инициализирует MVC-компоненты игры.
-        /// </summary>
-        private void InitializeMVC()
+        public class FlowerData
         {
-            // Создаём Model - содержит все данные игры
-            _model = new Models.GameModel();
-
-            // Создаём View - отвечает за отрисовку
-            _view = new Views.GameView(this);
-
-            // Создаём Controller - обрабатывает ввод и управляет игрой
-            _controller = new Controllers.GameController(this, _model, _view);
-            _controller.Initialize();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _view?.Dispose();
-            }
-            base.Dispose(disposing);
+            public Rectangle Bounds { get; set; }
+            public int WaterLevel { get; set; } = 0; // 0..100
+            public bool IsFull => WaterLevel >= 100;
         }
     }
 }
