@@ -1,33 +1,45 @@
 ```
 # Build artifacts
-bin/
-obj/
-*.dll
+*.obj
 *.exe
+*.dll
 *.pdb
 *.userprefs
+*.cache
+*.compiled
+[Bb]in/
+[Oo]bj/
+[Tt]emp/
+[Dd]ebug/
+[Rr]elease/
 
 # Dependencies
 packages/
 node_modules/
+vendor/
 
 # Logs
 *.log
 
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-*.suo
+# User-specific files
+.vs/
 *.user
+*.suo
 *.userosscache
 *.sln.docstates
 
+# Environment specific settings
+.env
+.env.local
+.env.*
+!/.env.example
+
 # OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 ```
