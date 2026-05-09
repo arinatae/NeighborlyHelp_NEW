@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
-
+//hey
 namespace NeighborlyHelp
 {
     public enum GameState
@@ -121,7 +121,7 @@ namespace NeighborlyHelp
 
             gameField = new GameField();
             player = new Player(530, 450);
-            player.Width = 200;  // Размер игрока
+            player.Width = 201;  // Размер игрока
             player.Height = 200;
 
             try { playerSprite = new Bitmap("Assets/sprite0.png"); }
