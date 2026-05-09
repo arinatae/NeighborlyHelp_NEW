@@ -1,4 +1,4 @@
-﻿using NeighborlyHelp;
+using NeighborlyHelp;
 using NeighborlyHelp.Managers;
 using NeighborlyHelp.Models;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace NeighborlyHelp
         Quest2_Deliver,
         Quest3_Spawn,
         Quest3_Talk,
-        Quest3_Watering,    
+        Quest3_Watering,
         Quest3_Completed,
         Quest4_Spawn,     // Появление Ричарда
         Quest4_Talk,      // Диалог с Ричардом
@@ -1058,4 +1058,54 @@ namespace NeighborlyHelp
         public bool IsCorrect { get; set; }
     }
 
+}
+
++++NeighborlyHelp / Forms / Form1.cs(修改后)
+using System.Windows.Forms;
+
+namespace NeighborlyHelp
+{
+    /// <summary>
+    /// Главная форма игры. После рефакторинга использует MVC-архитектуру:
+    /// - GameModel хранит все данные игры (Model)
+    /// - GameView отвечает за отрисовку (View)
+    /// - GameController обрабатывает ввод и управляет логикой (Controller)
+    /// </summary>
+    public partial class Form1 : Form
+    {
+        private Models.GameModel _model = null!;
+        private Views.GameView _view = null!;
+        private Controllers.GameController _controller = null!;
+
+        public Form1()
+        {
+            InitializeComponent();
+            InitializeMVC();
+        }
+
+        /// <summary>
+        /// Инициализирует MVC-компоненты игры.
+        /// </summary>
+        private void InitializeMVC()
+        {
+            // Создаём Model - содержит все данные игры
+            _model = new Models.GameModel();
+
+            // Создаём View - отвечает за отрисовку
+            _view = new Views.GameView(this);
+
+            // Создаём Controller - обрабатывает ввод и управляет игрой
+            _controller = new Controllers.GameController(this, _model, _view);
+            _controller.Initialize();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _view?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
 }
