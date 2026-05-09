@@ -1,10 +1,8 @@
 ﻿using NeighborlyHelp.Controllers;
 using NeighborlyHelp.Models;
 
----NeighborlyHelp / Controllers / GameController.cs(原始)
 
 
-++ + NeighborlyHelp / Controllers / GameController.cs(修改后)
 using System;
 using System.Collections.Generic;
 using System.Drawing;

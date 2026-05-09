@@ -2,10 +2,8 @@
 using NeighborlyHelp.Models;
 using System.Reflection;
 
----NeighborlyHelp / Models / GameModel.cs(原始)
 
 
-++ + NeighborlyHelp / Models / GameModel.cs(修改后)
 using System.Collections.Generic;
 using System.Drawing;
 

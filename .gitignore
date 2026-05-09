@@ -1,9 +1,33 @@
-# Visual Studio
-.vs/
+```
+# Build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.userprefs
+
+# Dependencies
+packages/
+node_modules/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-bin/
-obj/
 
+# OS generated files
+.DS_Store
+Thumbs.db
+```

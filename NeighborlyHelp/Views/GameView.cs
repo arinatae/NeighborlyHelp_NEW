@@ -1,10 +1,8 @@
 ﻿using NeighborlyHelp.Views;
 using System.Windows.Forms;
 
----NeighborlyHelp / Views / GameView.cs(原始)
 
 
-++ + NeighborlyHelp / Views / GameView.cs(修改后)
 using System;
 using System.Collections.Generic;
 using System.Drawing;
